@@ -19,4 +19,3 @@ let data = [
     }
   ] 
   export default data;
-//작명했을때는 (defalut) 안했을때는 중괄호 필수, import시에도 중괄호해야함!! 작명금지
