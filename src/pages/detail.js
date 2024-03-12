@@ -2,15 +2,20 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import {styled} from "styled-components";
-
+import Nav from 'react-bootstrap/Nav';
+import {addOrder} from "../store.js"
+import { useDispatch } from "react-redux";
 
 export default function Detail(props) {
 // Detail 컴포넌트가 렌더링, 업데이트 될 때마다 실행되는 useEffect
 //useEffect는 html이 랜더링 된 후에 실행되는 함수, 복잡한 연산을 할 때 사용! html 렌더링이 더 중요하기 때문에
+// let state = useSelector((state)=> state )
+let dispatch = useDispatch()
 
  
 let [display, setDisplay] = useState(0);
 let [input, setInput] = useState('');
+let [tab, setTab] = useState(0);
 
   useEffect(()=>{
     let a = setTimeout(() => { setDisplay(1)}, 2000)
@@ -41,14 +46,49 @@ let [input, setInput] = useState('');
           <h4 className="pt-5">{foundShoes.title}</h4>
           <p>{foundShoes.content}</p>
           <p>{foundShoes.price}</p>
-          <button className="btn btn-danger">주문하기</button>
+          <button className="btn btn-danger" onClick={()=>{
+            dispatch(addOrder({id : foundShoes.id, name : foundShoes.title, count : 1}))
+          }}>주문하기</button>
           <input type="text" onChange={(e)=>{
             setInput(e.target.value)
           }}/>
         </div>
 
+
+
+
       </div>
+      <Nav variant="tabs" defaultActiveKey="link-0">
+      <Nav.Item>
+        <Nav.Link eventKey="link-0" onClick={()=>{
+          setTab(0)
+        }}>Active</Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link eventKey="link-1" onClick={()=>{
+          setTab(1)
+        }}>Option 2</Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link eventKey="link-2" onClick={()=>{
+          setTab(2)
+        }}>Option 3</Nav.Link>
+      </Nav.Item>
+    </Nav>
+
+    <TabContent tab={tab} ></TabContent>
     </div>
   );
+}
+
+function TabContent({tab}){
+  return (
+    <div>
+      {tab == 0? <div>내용1</div> : null}
+      {tab == 1? <div>내용2</div> : null}
+      {tab == 2? <div>내용3</div> : null}
+    </div>
+  )
+
 }
 

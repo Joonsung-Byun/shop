@@ -1,16 +1,22 @@
 import "./App.css";
 import {Navbar, Container, Nav} from 'react-bootstrap';
 import bg from './img/bg.png';
-import { useState } from "react";
+import { createContext, useState } from "react";
 import data from './data.js';
 import { Link, Routes, Route, useNavigate, Outlet } from 'react-router-dom';
 import Detail from "./pages/detail.js";
 import Event from "./pages/event.js";
 import axios from "axios";
+import Cart from "./pages/Cart.js";
+
+//context란 state 보관함
 
 function App() {
   let [shoes,setShoes] = useState(data);
+  // let [stock] = useState([10,11,12]);
   let navigate = useNavigate();
+  let [num, setNum] = useState(2);
+
 
   return (
     <div className="App">
@@ -22,7 +28,7 @@ function App() {
           <Nav.Link onClick={()=>{ navigate('/') }}>Home</Nav.Link>
           <Nav.Link onClick={()=>{ navigate('/detail') }}>Detail</Nav.Link>
           <Nav.Link onClick={()=>{ navigate('/event') }}>Event</Nav.Link>
-          
+          <Nav.Link onClick={()=>{ navigate('/cart') }}>Cart</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -51,27 +57,30 @@ function App() {
             }}>Sort Shoes</button>
 
             <button onClick={()=>{
-              axios.get('https://codingapple1.github.io/shop/data2.json')
+              setNum(num+1);
+              console.log(num)
+              if(num>3){
+                alert('더이상 상품이 없습니다.');
+              } else {
+              axios.get(`https://codingapple1.github.io/shop/data${num}.json`)
               .then((result)=>{ 
                 let copy = [...shoes, ...result.data]
                 setShoes(copy)
                 ;})
-              
-              
+              }              
             }}>상품더보기</button>
           
-          
-          
-          
+
           
           </div>
         </div>}/>
         <Route path="/detail" element={ <div>Detail 페이지임~</div> }></Route>
-        <Route path="/detail/:id" element={ <Detail shoes={shoes}/> }></Route>
+          <Route path="/detail/:id" element={ <Detail shoes={shoes}/> }></Route>
         <Route path="/event" element={ <Event /> }>
             <Route path="one" element={ <div> 첫 주문시 양배추즙 서비스 </div> }/>
             <Route path="two" element={ <div> 생일기념 쿠폰받기 </div> }/>
         </Route>
+        <Route path="/cart" element={ <Cart/> }/>
         <Route path="*" element={ <div> 404페이지임~~ </div> }/>
       </Routes>
 
