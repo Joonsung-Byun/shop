@@ -17,20 +17,34 @@ let [display, setDisplay] = useState(0);
 let [input, setInput] = useState('');
 let [tab, setTab] = useState(0);
 
-  useEffect(()=>{
-    let a = setTimeout(() => { setDisplay(1)}, 2000)
-    if (isNaN (input)==true) {
-      alert('그러지마세요;;')
-    }
+  // useEffect(()=>{
+  //   let a = setTimeout(() => { setDisplay(1)}, 2000)
+  //   if (isNaN (input)==true) {
+  //     alert('그러지마세요;;')
+  //   }
 
     //useEffect안에서 return문을 사용하면, 재랜더링시 이전에 실행중이던 함수들을 종료시킬 수 있다. eg) setTimeout, data fetch
     //신기한건 cleanup Function은 최초 mount시에는 실행이 안되고, unmount시 실행된다.
 
-  }, [input])
-
-  
+  // }, [input])
 
   let {id} = useParams();
+
+  useEffect(()=>{
+    let 꺼낸거 = localStorage.getItem('watched');
+    꺼낸거 = JSON.parse(꺼낸거)
+    꺼낸거.push(foundShoes.id);
+    꺼낸거 = new Set(꺼낸거);
+    꺼낸거 = Array.from(꺼낸거);
+    localStorage.setItem('watched', JSON.stringify(꺼낸거))
+  }
+  , [])
+
+  
+  
+ 
+
+  
   const foundShoes = props.shoes.find(e => e.id === parseInt(id));
   return (
     <div className="container">

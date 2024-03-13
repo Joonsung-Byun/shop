@@ -1,22 +1,40 @@
 import "./App.css";
 import {Navbar, Container, Nav} from 'react-bootstrap';
 import bg from './img/bg.png';
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import data from './data.js';
 import { Link, Routes, Route, useNavigate, Outlet } from 'react-router-dom';
 import Detail from "./pages/detail.js";
 import Event from "./pages/event.js";
 import axios from "axios";
 import Cart from "./pages/Cart.js";
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import Seen from "./pages/Seen.js";
+
 
 //context란 state 보관함
 
 function App() {
+  
+
+  useEffect(()=>{
+    let watchedValue = localStorage.getItem('watched');
+    if (watchedValue !== null && watchedValue !== undefined) {   
+      // 'watched' 키의 값이 있는 경우 처리할 내용을 여기에 작성합니다.
+      watchedValue = JSON.parse(watchedValue)
+
+  } else {
+      // 'watched' 키의 값이 없는 경우 처리할 내용을 여기에 작성합니다.
+      localStorage.setItem('watched', JSON.stringify( [] ))
+
+  }
+  },[])
+
   let [shoes,setShoes] = useState(data);
   // let [stock] = useState([10,11,12]);
   let navigate = useNavigate();
   let [num, setNum] = useState(2);
-
 
   return (
     <div className="App">
@@ -29,6 +47,7 @@ function App() {
           <Nav.Link onClick={()=>{ navigate('/detail') }}>Detail</Nav.Link>
           <Nav.Link onClick={()=>{ navigate('/event') }}>Event</Nav.Link>
           <Nav.Link onClick={()=>{ navigate('/cart') }}>Cart</Nav.Link>
+          <Nav.Link onClick={()=>{ navigate('/seen') }}>Recently Viewed</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -41,7 +60,7 @@ function App() {
             <div className="row">
               {
               shoes.map(function(a, i){
-                return <Card shoes={shoes} i={i} key={i} />
+                return <Cards shoes={shoes} i={i} key={i} />
                 })
               }
             </div>
@@ -81,6 +100,7 @@ function App() {
             <Route path="two" element={ <div> 생일기념 쿠폰받기 </div> }/>
         </Route>
         <Route path="/cart" element={ <Cart/> }/>
+        <Route path="/seen" element={ <Seen shoes={shoes}/> }/>
         <Route path="*" element={ <div> 404페이지임~~ </div> }/>
       </Routes>
 
@@ -90,7 +110,8 @@ function App() {
 }
 export default App;
 
-function Card(props){
+function Cards(props){
+  console.log(props.shoes)
   let navigate = useNavigate();
   return(
     <div className="col-md-4">

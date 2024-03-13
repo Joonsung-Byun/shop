@@ -9,10 +9,7 @@ let stock = createSlice({
 
 let cart = createSlice({
   name: 'cartInfo',
-  initialState: [
-    {id : 0, name : 'White and Black', count : 2},
-    {id : 2, name : 'Grey Yordan', count : 1}
-  ],
+  initialState: [ ],
   reducers: {
     addCount(state, action){
       const foundItem = state.find((item) => item.id == action.payload)
@@ -31,6 +28,8 @@ let cart = createSlice({
 })    
 
 export let {addCount, addOrder}  = cart.actions
+
+
 
 
 export default configureStore({
