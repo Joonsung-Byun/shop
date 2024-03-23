@@ -8,27 +8,52 @@ import Detail from "./pages/detail.js";
 import Event from "./pages/event.js";
 import axios from "axios";
 import Cart from "./pages/Cart.js";
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import Seen from "./pages/Seen.js";
+
 
 
 //context란 state 보관함
 
 function App() {
-  
+
 
   useEffect(()=>{
-    let watchedValue = localStorage.getItem('watched');
-    if (watchedValue !== null && watchedValue !== undefined) {   
-      // 'watched' 키의 값이 있는 경우 처리할 내용을 여기에 작성합니다.
-      watchedValue = JSON.parse(watchedValue)
+    const options = {
+      method: 'GET',
+      url: 'https://api-football-v1.p.rapidapi.com/v3/fixtures?',
+      params: {
+        next: '50'
+      },
+      headers: {
+        'X-RapidAPI-Key': '67142be9e1msha21067b17d884d6p1f558ejsn8dc79fea8402',
+        'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+      }
+    };
+    
+    try {
+      const fetchData = async () => {
+        const response = await axios.request(options);
+        console.log(response.data.response);
+      };
 
-  } else {
-      // 'watched' 키의 값이 없는 경우 처리할 내용을 여기에 작성합니다.
-      localStorage.setItem('watched', JSON.stringify( [] ))
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
 
-  }
+
+
+  //   let watchedValue = localStorage.getItem('watched');
+  //   if (watchedValue !== null && watchedValue !== undefined) {   
+  //     // 'watched' 키의 값이 있는 경우 처리할 내용을 여기에 작성합니다.
+  //     watchedValue = JSON.parse(watchedValue)
+  //     let foundIndex = watchedValue.length;
+      
+  // } else {
+  //     // 'watched' 키의 값이 없는 경우 처리할 내용을 여기에 작성합니다.
+  //     localStorage.setItem('watched', JSON.stringify( [] ))
+
+  // }
   },[])
 
   let [shoes,setShoes] = useState(data);
@@ -77,7 +102,6 @@ function App() {
 
             <button onClick={()=>{
               setNum(num+1);
-              console.log(num)
               if(num>3){
                 alert('더이상 상품이 없습니다.');
               } else {
@@ -100,7 +124,7 @@ function App() {
             <Route path="two" element={ <div> 생일기념 쿠폰받기 </div> }/>
         </Route>
         <Route path="/cart" element={ <Cart/> }/>
-        <Route path="/seen" element={ <Seen shoes={shoes}/> }/>
+        <Route path="/seen" element={ <Seen shoes={shoes} setShoes={setShoes}/> }/>
         <Route path="*" element={ <div> 404페이지임~~ </div> }/>
       </Routes>
 
@@ -111,7 +135,6 @@ function App() {
 export default App;
 
 function Cards(props){
-  console.log(props.shoes)
   let navigate = useNavigate();
   return(
     <div className="col-md-4">

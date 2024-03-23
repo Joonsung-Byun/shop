@@ -33,12 +33,13 @@ let [tab, setTab] = useState(0);
   useEffect(()=>{
     let 꺼낸거 = localStorage.getItem('watched');
     꺼낸거 = JSON.parse(꺼낸거)
-    꺼낸거.push(foundShoes.id);
+    꺼낸거.unshift(foundShoes.id);
+    if(꺼낸거.length>3) {꺼낸거.pop();}
     꺼낸거 = new Set(꺼낸거);
     꺼낸거 = Array.from(꺼낸거);
     localStorage.setItem('watched', JSON.stringify(꺼낸거))
   }
-  , [])
+  ,[])
 
   
   
@@ -48,6 +49,7 @@ let [tab, setTab] = useState(0);
   const foundShoes = props.shoes.find(e => e.id === parseInt(id));
   return (
     <div className="container">
+
       { display == 0? <div className="alert alert-warning">2초이내 구매시 20% 할인</div> : null}
       <div className="row">
         <div className="col-md-6">
