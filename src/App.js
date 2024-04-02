@@ -1,20 +1,25 @@
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
-import Detail from "./pages/detail.js";
-import Navigation from "./nav.js";
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import { Routes, Route, useNavigate } from "react-router-dom";
+import Detail from "./pages/Detail.js";
 import Event from "./pages/event";
 import data from "./data";
 import { useState } from "react";
 import Page404 from "./pages/Page404";
 import bg from "./img/bg.png";
-import { Container, Row, Col } from "react-bootstrap";
+ import {  Row, Col } from "react-bootstrap";
 import axios from "axios";
 // import { useEffect } from "react";
 
 function App() {
   let [shoes, setShoes] = useState(data);
   let [count, setCount] = useState(1);
-  console.log(count)
+  let navigate = useNavigate(); // useNavigate()를 사용하면 페이지 이동이 가능합니다. onClick에 navigate('/')를 넣으면 '/'로 이동합니다.
+  
+  
+  
   // let [more, setMore] = useState(false);
 
   // useEffect(() => {
@@ -28,13 +33,23 @@ function App() {
 
   return (
     <div className="App">
-      <Navigation></Navigation>
+      <Navbar bg="dark" data-bs-theme="dark">
+        <Container>
+          <Navbar.Brand href="#home">ShoeShop</Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link onClick={()=>{navigate('/')}}>Home</Nav.Link>
+            <Nav.Link onClick={()=>{navigate('/detail')}}>Detail</Nav.Link>
+            <Nav.Link onClick={()=>{navigate('/event')}}>Event</Nav.Link>
+          </Nav>
+        </Container>
+      </Navbar>
       <Routes>
         <Route path="/" element={
             <>
               <div className="main-bg" style={{ backgroundImage: "url(" + bg + ")" }}></div>
               <div>
                 <Container>
+                
                   <Row>
                     {shoes.map(function (a, i) {
                       const imageUrl = `https://codingapple1.github.io/shop/shoes${ i + 1 }.jpg`;
@@ -66,28 +81,10 @@ function App() {
           </Route> 
           <Route path="/detail/:id" element={<Detail shoes={shoes}/>} />
 
-          <Route path="event" element={<Event />}>
-            <Route path="one" element={<p>첫 주문시 양배추집 서비스</p>}></Route>
-            <Route path="two" element={<p>생일기념 쿠폰받기</p>}></Route>
-          </Route>
-
-          <Route path="*" element={<Page404 error={"404인디 ㅅㄱㅋㅋ"} />} />
+          <Route path="*" element={<>404임</>}  />
       </Routes>
     </div>
   );
 }
 export default App;
 
-function Cards(props){
-  let navigate = useNavigate();
-  return(
-    <div className="col-md-4">
-      <img src={`https://codingapple1.github.io/shop/shoes${props.i + 1}.jpg`} width="80%" onClick={()=>{
-        navigate(`/detail/${props.shoes[props.i].id}`);
-      }}
-      style={{cursor:'pointer'}}/>
-      <p>{props.shoes[props.i].title}</p>
-      <p>{props.shoes[props.i].price}</p>
-    </div>
-  )
-}
